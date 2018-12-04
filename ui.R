@@ -20,7 +20,8 @@ shinyServer(dashboardPage(skin="blue",
                               menuItem("Home",tabName = "home", icon = icon("home")),
                               menuItem("Recommendations", tabName = "recommend", icon = icon("film")),
                               menuItem("About", tabName = "about", icon = icon("question-circle")),
-                              menuItem("Source Code", icon = icon("file-code-o"),href = "#"),
+                              menuItem("Source Code", icon = icon("file-code-o"),href = "https://github.com/CapstoneProject18/Movie-Recommender-System"),
+                              menuItem("Trending",tabName = "trending", icon = icon("fire")),
                               menuItem(
                                 list(
                                   
@@ -71,7 +72,7 @@ shinyServer(dashboardPage(skin="blue",
                                       box(width = 12, collapsible =  FALSE, title = h1("Recommendations From Movies Already In DataBase"),
                                       tableOutput("recommend_table")
                                       ),
-                                      box(width = 12, collapsible = TRUE, title = h2("Use To Add Movie Not Available in Database"),
+                                      box(width = 12, collapsible = TRUE, title = h2("Use To Add Movie Not Available in Database"),collapsed = TRUE,
                                          fluidRow(column(2,textInput("v1","Movie-Name(Year)")),
                                                   column(6,textInput("v2","Genres(Sepeated by |)")),
                                                   column(4, sliderInput("decimal","Ratings",min=1,max = 5,step = 0.1,value = 2.5)),
@@ -80,7 +81,8 @@ shinyServer(dashboardPage(skin="blue",
                                           ),
                                     dataTableOutput("displayUpdate")
                                       
-                          )
-                            )
+                          ),
+                          tabItem(tabName = "trending", h2("Trending Movies"),dataTableOutput("trendingTable"))
                           ))
             )
+)

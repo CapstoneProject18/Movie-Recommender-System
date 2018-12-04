@@ -11,7 +11,9 @@ library(shiny)
 
 library(DT)
 library(dplyr)
+library(reshape2)
 
+Logged <- FALSE
 
 movies <- read.csv("movies.csv", header = TRUE, stringsAsFactors=FALSE)
 formatInput <- function(v,a,d){
@@ -22,6 +24,13 @@ formatInput <- function(v,a,d){
 }
 
 shinyServer(function(input, output) {
+  
+  
+  
+  
+  source(file = "ui.R")#Main Dashboard
+  source(file = "Login.R") #Login Page
+  
   
   #Checking if the movie select has a good rating or not 
   
@@ -154,188 +163,6 @@ output$movieTable <- renderDataTable({
   movies[c("title","genres")] 
 })
 
-#Gettting the subset for selected genre in recommendation tab
-# output$ui <- renderUI({
-#   if (is.null(input$input_genre1))
-#     return()
-#   switch(input$input_genre1,
-#          "Action" = selectInput("select_genre1", "Movie of Genre #1",
-#                                 choices = sort(subset(search_matrix, Action == 1)$title),
-#                                 selected = sort(subset(search_matrix, Action == 1)$title)[1]),
-#          "Adventure" = selectInput("select_genre1", "Movie of Genre #1",
-#                                    choices = sort(subset(search_matrix, Adventure == 1)$title),
-#                                    selected = sort(subset(search_matrix, Adventure == 1)$title)[1]),
-#          "Animation" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                     choices = sort(subset(search_matrix, Animation == 1)$title),
-#                                     selected = sort(subset(search_matrix, Animation == 1)$title)[1]),
-#          "Children" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                    choices = sort(subset(search_matrix, Children == 1)$title),
-#                                    selected = sort(subset(search_matrix, Children == 1)$title)[1]),
-#          "Comedy" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                  choices = sort(subset(search_matrix, Comedy == 1)$title),
-#                                  selected = sort(subset(search_matrix, Comedy == 1)$title)[1]),
-#          "Crime" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                 choices = sort(subset(search_matrix, Crime == 1)$title),
-#                                 selected = sort(subset(search_matrix, Crime == 1)$title)[1]),
-#          "Documentary" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                       choices = sort(subset(search_matrix, Documentary == 1)$title),
-#                                       selected = sort(subset(search_matrix, Documentary == 1)$title)[1]),
-#          "Drama" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                 choices = sort(subset(search_matrix, Drama == 1)$title),
-#                                 selected = sort(subset(search_matrix, Drama == 1)$title)[1]),
-#          "Fantasy" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                   choices = sort(subset(search_matrix, Fantasy == 1)$title),
-#                                   selected = sort(subset(search_matrix, Fantasy == 1)$title)[1]),
-#          "Film.Noir" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                     choices = sort(subset(search_matrix, Film.Noir == 1)$title),
-#                                     selected = sort(subset(search_matrix, Film.Noir == 1)$title)[1]),
-#          "Horror" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                  choices = sort(subset(search_matrix, Horror == 1)$title),
-#                                  selected = sort(subset(search_matrix, Horror == 1)$title)[1]),
-#          "Musical" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                   choices = sort(subset(search_matrix, Musical == 1)$title),
-#                                   selected = sort(subset(search_matrix, Musical == 1)$title)[1]),
-#          "Mystery" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                   choices = sort(subset(search_matrix, Mystery == 1)$title),
-#                                   selected = sort(subset(search_matrix, Mystery == 1)$title)[1]),
-#          "Romance" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                   choices = sort(subset(search_matrix, Romance == 1)$title),
-#                                   selected = sort(subset(search_matrix, Romance == 1)$title)[1]),
-#          "Sci.Fi" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                  choices = sort(subset(search_matrix, Sci.Fi == 1)$title),
-#                                  selected = sort(subset(search_matrix, Sci.Fi == 1)$title)[1]),
-#          "Thriller" =  selectInput("select_genre1", "Movie of Genre #1",
-#                                    choices = sort(subset(search_matrix, Thriller == 1)$title),
-#                                    selected = sort(subset(search_matrix, Thriller == 1)$title)[1]),
-#          "War" =  selectInput("select_genre1", "Movie of Genre #1",
-#                               choices = sort(subset(search_matrix, War == 1)$title),
-#                               selected = sort(subset(search_matrix, War == 1)$title)[1]),
-#          "Western" = selectInput("select_genre1", "Movie of Genre #1",
-#                                  choices = sort(subset(search_matrix, Western == 1)$title),
-#                                  selected = sort(subset(search_matrix, Western == 1)$title)[1])
-#          )
-# })
-# output$ui2 <- renderUI({
-#   if (is.null(input$input_genre2))
-#     return()
-#   switch(input$input_genre2,
-#          "Action" = selectInput("select_genre2", "Movie of Genre #2",
-#                                 choices = sort(subset(search_matrix, Action == 1)$title),
-#                                 selected = sort(subset(search_matrix, Action == 1)$title)[1]),
-#          "Adventure" = selectInput("select_genre2", "Movie of Genre #2",
-#                                    choices = sort(subset(search_matrix, Adventure == 1)$title),
-#                                    selected = sort(subset(search_matrix, Adventure == 1)$title)[1]),
-#          "Animation" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                     choices = sort(subset(search_matrix, Animation == 1)$title),
-#                                     selected = sort(subset(search_matrix, Animation == 1)$title)[1]),
-#          "Children" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                    choices = sort(subset(search_matrix, Children == 1)$title),
-#                                    selected = sort(subset(search_matrix, Children == 1)$title)[1]),
-#          "Comedy" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                  choices = sort(subset(search_matrix, Comedy == 1)$title),
-#                                  selected = sort(subset(search_matrix, Comedy == 1)$title)[1]),
-#          "Crime" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                 choices = sort(subset(search_matrix, Crime == 1)$title),
-#                                 selected = sort(subset(search_matrix, Crime == 1)$title)[1]),
-#          "Documentary" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                       choices = sort(subset(search_matrix, Documentary == 1)$title),
-#                                       selected = sort(subset(search_matrix, Documentary == 1)$title)[1]),
-#          "Drama" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                 choices = sort(subset(search_matrix, Drama == 1)$title),
-#                                 selected = sort(subset(search_matrix, Drama == 1)$title)[1]),
-#          "Fantasy" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                   choices = sort(subset(search_matrix, Fantasy == 1)$title),
-#                                   selected = sort(subset(search_matrix, Fantasy == 1)$title)[1]),
-#          "Film.Noir" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                     choices = sort(subset(search_matrix, Film.Noir == 1)$title),
-#                                     selected = sort(subset(search_matrix, Film.Noir == 1)$title)[1]),
-#          "Horror" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                  choices = sort(subset(search_matrix, Horror == 1)$title),
-#                                  selected = sort(subset(search_matrix, Horror == 1)$title)[1]),
-#          "Musical" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                   choices = sort(subset(search_matrix, Musical == 1)$title),
-#                                   selected = sort(subset(search_matrix, Musical == 1)$title)[1]),
-#          "Mystery" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                   choices = sort(subset(search_matrix, Mystery == 1)$title),
-#                                   selected = sort(subset(search_matrix, Mystery == 1)$title)[1]),
-#          "Romance" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                   choices = sort(subset(search_matrix, Romance == 1)$title),
-#                                   selected = sort(subset(search_matrix, Romance == 1)$title)[1]),
-#          "Sci.Fi" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                  choices = sort(subset(search_matrix, Sci.Fi == 1)$title),
-#                                  selected = sort(subset(search_matrix, Sci.Fi == 1)$title)[1]),
-#          "Thriller" =  selectInput("select_genre2", "Movie of Genre #2",
-#                                    choices = sort(subset(search_matrix, Thriller == 1)$title),
-#                                    selected = sort(subset(search_matrix, Thriller == 1)$title)[1]),
-#          "War" =  selectInput("select_genre2", "Movie of Genre #2",
-#                               choices = sort(subset(search_matrix, War == 1)$title),
-#                               selected = sort(subset(search_matrix, War == 1)$title)[1]),
-#          "Western" = selectInput("select_genre2", "Movie of Genre #2",
-#                                  choices = sort(subset(search_matrix, Western == 1)$title),
-#                                  selected = sort(subset(search_matrix, Western == 1)$title)[1])
-#   )
-# })
-# 
-# output$ui3 <- renderUI({
-#   if (is.null(input$input_genre3))
-#     return()
-#   switch(input$input_genre3,
-#          "Action" = selectInput("select_genre3", "Movie of Genre #3",
-#                                 choices = sort(subset(search_matrix, Action == 1)$title),
-#                                 selected = sort(subset(search_matrix, Action == 1)$title)[1]),
-#          "Adventure" = selectInput("select_genre3", "Movie of Genre #3",
-#                                    choices = sort(subset(search_matrix, Adventure == 1)$title),
-#                                    selected = sort(subset(search_matrix, Adventure == 1)$title)[1]),
-#          "Animation" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                     choices = sort(subset(search_matrix, Animation == 1)$title),
-#                                     selected = sort(subset(search_matrix, Animation == 1)$title)[1]),
-#          "Children" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                    choices = sort(subset(search_matrix, Children == 1)$title),
-#                                    selected = sort(subset(search_matrix, Children == 1)$title)[1]),
-#          "Comedy" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                  choices = sort(subset(search_matrix, Comedy == 1)$title),
-#                                  selected = sort(subset(search_matrix, Comedy == 1)$title)[1]),
-#          "Crime" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                 choices = sort(subset(search_matrix, Crime == 1)$title),
-#                                 selected = sort(subset(search_matrix, Crime == 1)$title)[1]),
-#          "Documentary" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                       choices = sort(subset(search_matrix, Documentary == 1)$title),
-#                                       selected = sort(subset(search_matrix, Documentary == 1)$title)[1]),
-#          "Drama" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                 choices = sort(subset(search_matrix, Drama == 1)$title),
-#                                 selected = sort(subset(search_matrix, Drama == 1)$title)[1]),
-#          "Fantasy" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                   choices = sort(subset(search_matrix, Fantasy == 1)$title),
-#                                   selected = sort(subset(search_matrix, Fantasy == 1)$title)[1]),
-#          "Film.Noir" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                     choices = sort(subset(search_matrix, Film.Noir == 1)$title),
-#                                     selected = sort(subset(search_matrix, Film.Noir == 1)$title)[1]),
-#          "Horror" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                  choices = sort(subset(search_matrix, Horror == 1)$title),
-#                                  selected = sort(subset(search_matrix, Horror == 1)$title)[1]),
-#          "Musical" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                   choices = sort(subset(search_matrix, Musical == 1)$title),
-#                                   selected = sort(subset(search_matrix, Musical == 1)$title)[1]),
-#          "Mystery" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                   choices = sort(subset(search_matrix, Mystery == 1)$title),
-#                                   selected = sort(subset(search_matrix, Mystery == 1)$title)[1]),
-#          "Romance" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                   choices = sort(subset(search_matrix, Romance == 1)$title),
-#                                   selected = sort(subset(search_matrix, Romance == 1)$title)[1]),
-#          "Sci.Fi" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                  choices = sort(subset(search_matrix, Sci.Fi == 1)$title),
-#                                  selected = sort(subset(search_matrix, Sci.Fi == 1)$title)[1]),
-#          "Thriller" =  selectInput("select_genre3", "Movie of Genre #3",
-#                                    choices = sort(subset(search_matrix, Thriller == 1)$title),
-#                                    selected = sort(subset(search_matrix, Thriller == 1)$title)[1]),
-#          "War" =  selectInput("select_genre3", "Movie of Genre #3",
-#                               choices = sort(subset(search_matrix, War == 1)$title),
-#                               selected = sort(subset(search_matrix, War == 1)$title)[1]),
-#          "Western" = selectInput("select_genre3", "Movie of Genre #3",
-#                                  choices = sort(subset(search_matrix, Western == 1)$title),
-#                                  selected = sort(subset(search_matrix, Western == 1)$title)[1])
-#   )
-# })
 
 output$recommend_table <- renderTable({
   # Filter for based on genre of selected movies to enhance recommendations
@@ -396,10 +223,11 @@ output$recommend_table <- renderTable({
 movies_new <- data.frame(movieID=integer(),title=character(),genres=character())
 adding_data <- reactive({
   movies_new <- data.frame(movieID=rep(last(movies$movieId)+1),title=rep(input$v1),genres=input$v2)
-  return(movies_new)
+  #return(movies_new)
 })
   
   
+
 FinalData <- eventReactive(input$add,{
   cbind.data.frame(adding_data(),movies_new)
   
@@ -409,6 +237,14 @@ FinalData <- eventReactive(input$add,{
   })
 
  output$displayUpdate = renderDataTable(FinalData())
+ 
+ 
+ output$trendingTable = renderDataTable({
+   title.views<- merge(movies,table_views)
+   title.views<-title.views[order(title.views$views, decreasing = TRUE),]
+   title.views<-title.views[1:50,]
+   title.views[c("title","views")]
+ })
 
 })
   
